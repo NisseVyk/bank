@@ -1,11 +1,11 @@
 import accounts
-""" import gui
+import gui
 import time
 
 import os
 def clear():    
     os.system("cls" if os.name == 'nt' else 'clear')
 
-#app = gui.App(account_list)
+app = gui.App(accounts.account_list)
 
-#app.mainloop() """
+app.mainloop()

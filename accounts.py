@@ -1,9 +1,9 @@
 import pickle
-#import random
+import random
 import os
-#import time
+import time
 
-accounts = []
+account_list = []
 
 class Accounts:
     def __init__(self, number, pincode, fname, lname, balance):
@@ -19,13 +19,13 @@ def clear():
 
 
 
-""" def save_file():
-    with open('account.dict', 'wb') as account_list_file:
+def save_file():
+    with open('account.bin', 'wb') as account_list_file:
         pickle.dump(account_list, account_list_file)
 
 def clear_file():
     account_list = []
-    with open('account.dict', 'wb') as account_list_file:
+    with open('account.bin', 'wb') as account_list_file:
         pickle.dump(account_list, account_list_file)
 
 def login(account_number, pincode):
@@ -58,11 +58,11 @@ def create_account():
     pincode = input("What do you want your pin code to be?")
     account_list.append(Accounts(str(number), str(pincode), fname, lname, 0))
     save_file()
-    input(number) """
+    input(number)
 
 
 
-with open('account.dict', 'rb') as account_list_file:
+with open('account.bin', 'rb') as account_list_file:
     print("1")
     account_list = pickle.load(account_list_file)
 
