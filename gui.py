@@ -43,7 +43,8 @@ class App(customtkinter.CTk):
     def create_home(self):
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
-
+        
         self.balance = customtkinter.CTkLabel(self, width=160, height=40, text=self.logged_in_as.balance)
+        self.balance.grid(row=0, column=1, padx=45, pady=10)
 
 
