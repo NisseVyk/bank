@@ -6,7 +6,7 @@ import time
 account_list = []
 
 class Accounts:
-    def __init__(self, number, pincode, fname, lname, balance):
+    def __init__(self, number : str, pincode : str, fname : str, lname : str, balance : int):
         self.number = number
         self.pincode = pincode
         self.fname = fname
