@@ -8,9 +8,10 @@ class App(customtkinter.CTk):
     def __init__(self, accounts):
         super().__init__()
         self.accounts = accounts
-
+        self.logged_in_as = self.accounts[0]
         self.title("Banken")
         self.geometry("900x600")
+        customtkinter.set_appearance_mode("light")
 
         self.account_number_entry = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Account Number:")
         self.account_number_entry.grid(row=0, column=1, padx=45, pady=10)
@@ -20,7 +21,9 @@ class App(customtkinter.CTk):
 
         self.login_button = customtkinter.CTkButton(self, width=100, height=25, text="Login", command=self.login)
         self.login_button.grid(row=2, column=1, padx=45, pady=15)
-        print(self.accounts)
+
+        self.destroy_login()
+        self.create_home()
 
     def login(self):
         account_number = self.account_number_entry.get()
@@ -41,9 +44,12 @@ class App(customtkinter.CTk):
         self.login_button.destroy()
 
     def create_home(self):
-        self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
+        self.grid_rowconfigure(10, weight=1)
 
-        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text=self.logged_in_as.balance)
+        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text=self.logged_in_as.fname + " " + self.logged_in_as.lname) #str(self.logged_in_as.balance)
+        self.balance.grid(column=0, row=1)
 
+        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Account balance: " + str(self.logged_in_as.balance)) #
+        self.balance.grid(column=3, row=1)
 
