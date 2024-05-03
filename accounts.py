@@ -18,10 +18,9 @@ def clear():
     os.system("cls" if os.name == 'nt' else 'clear')
 
 
-
-def save_file():
+def save_file(accounts):
     with open('account.bin', 'wb') as account_list_file:
-        pickle.dump(account_list, account_list_file)
+        pickle.dump(accounts, account_list_file)
 
 def clear_file():
     account_list = []
@@ -63,7 +62,4 @@ def create_account():
 
 
 with open('account.bin', 'rb') as account_list_file:
-    print("1")
     account_list = pickle.load(account_list_file)
-
-print("2")
