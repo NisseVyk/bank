@@ -1,6 +1,6 @@
 import customtkinter
 import accounts
-#from PIL import Image
+import random
 
 
 class App(customtkinter.CTk):
@@ -9,10 +9,15 @@ class App(customtkinter.CTk):
     def __init__(self, accounts):
         super().__init__()
         self.account_list = accounts
-        self.logged_in_as = accounts[0]
+        self.logged_in_as = ""
         self.title("Banken")
         self.geometry("900x600")
 
+        self.create_login()
+        #self.destroy_login()
+        #self.create_home()
+    
+    def create_login(self):
         self.account_number_entry = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Account Number:")
         self.account_number_entry.grid(row=0, column=1, padx=45, pady=10)
 
@@ -21,26 +26,15 @@ class App(customtkinter.CTk):
 
         self.login_button = customtkinter.CTkButton(self, width=100, height=25, text="Login", command=self.login)
         self.login_button.grid(row=2, column=1, padx=45, pady=15)
-        self.destroy_login()
-        self.create_home()
 
-    def login(self):
-        account_number = self.account_number_entry.get()
-        password = self.password_entry.get()
+        self.create_account_button = customtkinter.CTkButton(self, width=80, height=15, fg_color="transparent", text="Create Account", command=self.create_account_creator)
+        self.create_account_button.grid(row=3, column=1, padx=55)
 
-        for account in self.account_list:
-            if account_number == account.number:
-                if password == account.pincode:
-                    self.logged_in_as = account
-                    self.destroy_login()
-                    self.create_home()
-                else:
-                    print("fel lösen")
-    
     def destroy_login(self):
         self.account_number_entry.destroy()
         self.password_entry.destroy()
         self.login_button.destroy()
+        self.create_account_button.destroy()
 
 
     def create_home(self):
@@ -63,6 +57,24 @@ class App(customtkinter.CTk):
         self.deposit.destroy()
         self.undeposit.destroy()
 
+    def create_account_creator(self):
+        self.destroy_login()
+
+        self.grid_rowconfigure(5, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+
+        self.title = customtkinter.CTkLabel(self, width=200, height=40, text="Create Account")
+        self.title.grid(row=0, column=2, padx=45, pady=20)
+
+        self.fname_input = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="First Name:")
+        self.fname_input.grid(row=1, column=2, pady=5)
+        self.lname_input = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Last Name:")
+        self.lname_input.grid(row=2, column=2, pady=5)
+        self.pin_input = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Pin Code:")
+        self.pin_input.grid(row=3, column=2, pady=5)
+        self.create_account_button = customtkinter.CTkButton(self, width=160, height=40, text="Create Account", command=self.create_account)
+        self.create_account_button.grid(row=4, column=2, pady=5)
+
     def create_deposit(self):
 
         self.destroy_home()
@@ -82,21 +94,14 @@ class App(customtkinter.CTk):
         self.action = customtkinter.CTkButton(self, width=160, height=40, text="Deposit", command=self.deposit_money)
         self.action.grid(row=4, column=2, pady=10)
 
-    def deposit_money(self):
-        amount = self.amount.get()
-        try:
-            self.logged_in_as.balance += int(amount)
-            accounts.save_file(self.account_list)
-            self.destroy_deposit()
-            self.create_home()
-        except:
-            self.amount.destroy()
-            self.amount = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Invalid input", placeholder_text_color="red", border_color="red")
-            self.amount.grid(row=3, column=2, pady=10)
-        
+    def destroy_deposit(self):
+        self.name.destroy()
+        self.balance.destroy()
+        self.how_much.destroy()
+        self.amount.destroy()
+        self.action.destroy()
 
     def create_withdraw(self):
-
         self.destroy_home()
 
         self.grid_rowconfigure(6, weight=1)
@@ -114,6 +119,38 @@ class App(customtkinter.CTk):
         self.action = customtkinter.CTkButton(self, width=160, height=40, text="Withdraw", command=self.withdraw_money)
         self.action.grid(row=4, column=2, pady=10)
 
+    def login(self):
+        account_number = self.account_number_entry.get()
+        password = self.password_entry.get()
+
+        for account in self.account_list:
+            if account_number == account.number:
+                if password == account.pincode:
+                    self.logged_in_as = account
+                    self.destroy_login()
+                    self.create_home()
+                else:
+                    print("fel lösen")
+
+    def create_account(self):
+        fname = self.fname_input.get()
+        lname = self.lname_input.get()
+        pin = self.pin_input.get()
+
+
+
+    def deposit_money(self):
+        amount = self.amount.get()
+        try:
+            self.logged_in_as.balance += int(amount)
+            accounts.save_file(self.account_list)
+            self.destroy_deposit()
+            self.create_home()
+        except:
+            self.amount.destroy()
+            self.amount = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Invalid input", placeholder_text_color="red", border_color="red")
+            self.amount.grid(row=3, column=2, pady=10)
+    
     def withdraw_money(self):
         amount = self.amount.get()
 
@@ -126,10 +163,3 @@ class App(customtkinter.CTk):
             self.amount.destroy()
             self.amount = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Invalid input", placeholder_text_color="red", border_color="red")
             self.amount.grid(row=3, column=2, pady=10)
-
-    def destroy_deposit(self):
-        self.name.destroy()
-        self.balance.destroy()
-        self.how_much.destroy()
-        self.amount.destroy()
-        self.action.destroy()
