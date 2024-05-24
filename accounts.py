@@ -1,7 +1,6 @@
 import pickle
 import random
 import os
-import time
 
 account_list = []
 
@@ -12,7 +11,6 @@ class Accounts:
         self.fname = fname
         self.lname = lname
         self.balance = balance
-
 
 def clear():    
     os.system("cls" if os.name == 'nt' else 'clear')
@@ -29,37 +27,38 @@ def clear_file():
 
 def login(account_number, pincode):
     for account in account_list:
-         if account.number == account_number:
-             if account.pincode == pincode:
-                 clear()
-                 print(f"Login correct, welcome {account.fname} {account.lname}")
-                 time.sleep(3)
-                 return account
+        print(account)
+        if account_number == account.number:
+            input(1)
+            if pincode == account.pincode:
+                return account
+            else:
+                return "404"
+        else:
+            return "404"
+             
+def create_account(fname, lname, pin):
+        while True:
+            number = random.randint(100000000, 999999999)
+            unique = True
+            i= 0
+            while i < len(account_list):
+                if number == account_list[i].number:
+                    unique = False
+                i+=1
+            if unique:
+                break
+
+        account_list.append(Accounts(str(number), str(pin), fname, lname, 0))
+        print(account_list)
+        save_file(account_list)
+
+
+def get_account_list():
+    with open('account.bin', 'rb') as account_list_file:
+        account_list = pickle.load(account_list_file)
     
-
-def create_account():
-    while True:
-        number = random.randint(100000000, 999999999)
-        unique = True
-        i= 0
-        while i < len(account_list):
-            if number == account_list[i].number:
-                unique = False
-            i+=1
-        if unique:
-            break
-    
-    clear()
-    fname = input("What's your first name?\n")
-    clear()
-    lname = input("What's your last name?\n")
-    clear()
-    pincode = input("What do you want your pin code to be?")
-    account_list.append(Accounts(str(number), str(pincode), fname, lname, 0))
-    save_file()
-    input(number)
-
-
+    return account_list
 
 with open('account.bin', 'rb') as account_list_file:
     account_list = pickle.load(account_list_file)
