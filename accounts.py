@@ -18,6 +18,7 @@ class Accounts:
         self.balance = balance
 
 def login(account_number, pincode):
+    print(account_list)
     for account in account_list:
         print(account)
         if account_number == account["number"]:
@@ -25,8 +26,7 @@ def login(account_number, pincode):
                 return account
             else:
                 return "404"
-        else:
-            return "404"
+
              
 def create_account(fname, lname, pin):
         while True:
@@ -65,4 +65,3 @@ def get_account_list():
         account_list.append(item)
 
 get_account_list()
-print(account_list)
