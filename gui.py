@@ -34,7 +34,7 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(5, weight=1)
         self.grid_columnconfigure(2, weight=1)
         
-        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f"{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}")
+        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f'{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}')
         self.name.grid(row=0, column=1, padx=45, pady=10)
         self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as["balance"]))
         self.balance.grid(row=0, column=3, padx=45, pady=10)
@@ -72,7 +72,7 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(6, weight=1)
         self.grid_columnconfigure(2, weight=1)
 
-        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f"{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}")
+        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f'{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}')
         self.name.grid(row=0, column=1, padx=45, pady=10)
         self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as["balance"]))
         self.balance.grid(row=0, column=3, padx=45, pady=10)
@@ -90,7 +90,7 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(6, weight=1)
         self.grid_columnconfigure(2, weight=1)
 
-        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f"{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}")
+        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f'{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}')
         self.name.grid(row=0, column=1, padx=45, pady=10)
         self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as["balance"]))
         self.balance.grid(row=0, column=3, padx=45, pady=10)

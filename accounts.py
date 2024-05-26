@@ -1,7 +1,11 @@
 import pickle
 import random
 import os
-from pymongo import MongoClient
+try:
+    from pymongo import MongoClient
+except:
+    input('Run: python -m pip install "pymongo[srv]"')
+    exit()
 
 account_list = []
 
