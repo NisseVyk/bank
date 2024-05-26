@@ -19,13 +19,16 @@ class Accounts:
 
 def login(account_number, pincode):
     print(account_list)
-    for account in account_list:
-        print(account)
-        if account_number == account["number"]:
-            if pincode == account["pincode"]:
-                return account
+    i=0
+    while i<len(account_list):
+        if account_number == account_list[i]["number"]:
+            if pincode == account_list[i]["pincode"]:
+                return account_list[i]
             else:
                 return "404"
+        elif i == len(account_list)-1:
+            return "404"
+        i+=1
 
              
 def create_account(fname, lname, pin):
@@ -51,6 +54,23 @@ def update_balance(number, new_balance):
     db = get_collection()
     db.update_one(account, newvalues)
 
+def transfer_money(from_number, to_number, amount):
+    get_account_list()
+
+    for account in account_list:
+        if account["number"] == from_number:
+            from_balance = account["balance"] - amount
+            break
+
+    for account in account_list:
+        if account["number"] == to_number:
+            to_balance = account["balance"] + amount
+
+    update_balance(from_number, from_balance)
+    update_balance(to_number, to_balance)
+
+    get_account_list()
+
 def get_collection():
     connection_string = "mongodb+srv://dbuser:ballefjong@bankdb.caczuaa.mongodb.net/?retryWrites=true&w=majority&appName=bankdb"
 
@@ -65,3 +85,4 @@ def get_account_list():
         account_list.append(item)
 
 get_account_list()
+print(account_list)

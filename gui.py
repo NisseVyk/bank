@@ -14,8 +14,6 @@ class App(customtkinter.CTk):
         self.geometry("900x600")
 
         self.create_login()
-        #self.destroy_login()
-        #self.create_home()
     
     def create_login(self):
         self.account_number_entry = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Account Number:")
@@ -34,6 +32,8 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(5, weight=1)
         self.grid_columnconfigure(2, weight=1)
         
+        accounts.get_account_list()
+
         self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f'{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}')
         self.name.grid(row=0, column=1, padx=45, pady=10)
         self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as["balance"]))
@@ -43,6 +43,8 @@ class App(customtkinter.CTk):
         self.deposit.grid(row=3, column=2, pady=10)
         self.undeposit = customtkinter.CTkButton(self, width=180, height=40, text="Withdraw", command=self.create_withdraw)
         self.undeposit.grid(row=4, column=2, pady=10)
+        self.transfer = customtkinter.CTkButton(self, width=180, height=40, text="Transfer", command=self.create_transfer)
+        self.transfer.grid(row=5, column=2, pady=10)
 
         self.log_out_button = customtkinter.CTkButton(self, width=100, height=40, text="Log out", command=self.log_out)
         self.log_out_button.grid(row=7, column=1, pady=20)
@@ -83,6 +85,8 @@ class App(customtkinter.CTk):
         self.amount.grid(row=3, column=2, pady=10)
         self.action = customtkinter.CTkButton(self, width=160, height=40, text="Deposit", command=self.deposit_money)
         self.action.grid(row=4, column=2, pady=10)
+        self.back = customtkinter.CTkButton(self, width=160, height=40, text="Back", command=self.cancel)
+        self.back.grid(row=5, column=2, pady=10)
 
     def create_withdraw(self):
         self.destroy()
@@ -101,6 +105,34 @@ class App(customtkinter.CTk):
         self.amount.grid(row=3, column=2, pady=10)
         self.action = customtkinter.CTkButton(self, width=160, height=40, text="Withdraw", command=self.withdraw_money)
         self.action.grid(row=4, column=2, pady=10)
+        self.back = customtkinter.CTkButton(self, width=160, height=40, text="Back", command=self.cancel)
+        self.back.grid(row=5, column=2, pady=10)
+
+    def create_transfer(self):
+        self.destroy()
+
+        self.grid_rowconfigure(6, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+
+        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f'{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}')
+        self.name.grid(row=0, column=1, padx=45, pady=10)
+        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as["balance"]))
+        self.balance.grid(row=0, column=3, padx=45, pady=10)
+
+        self.text = customtkinter.CTkLabel(self, width=200, height=40, text="Transfer money")
+        self.text.grid(row=2, column=2, pady=10)
+        self.account_number_label = customtkinter.CTkLabel(self, width=170, height=40, text=f'From: {self.logged_in_as["number"]}')
+        self.account_number_label.grid(row=3, column=2, pady=10)
+        self.amount = customtkinter.CTkEntry(self, width=200, height=40, placeholder_text="Amount:")
+        self.amount.grid(row=4, column=2, pady=10)
+        self.account_number_entry = customtkinter.CTkEntry(self, width=200, height=40, placeholder_text="To:",)
+        self.account_number_entry.grid(row=5, column=2, pady=10)
+        
+        self.transfer_button = customtkinter.CTkButton(self, width=200, height=40, text="Transfer", command=self.transfer_money)
+        self.transfer_button.grid(row=6, column=2, pady=10)
+        self.back = customtkinter.CTkButton(self, width=160, height=40, text="Back", command=self.cancel)
+        self.back.grid(row=7, column=2)
+
 
     def destroy(wid):
         for item in wid.winfo_children():
@@ -127,6 +159,7 @@ class App(customtkinter.CTk):
     def log_out(self):
         self.logged_in_as = ""
         self.destroy()
+        accounts.get_account_list()
         self.create_login()
 
     def create_account(self):
@@ -153,12 +186,70 @@ class App(customtkinter.CTk):
     def withdraw_money(self):
         amount = self.amount.get()
         try:
-            self.logged_in_as["balance"] -= int(amount)
-            accounts.update_balance(self.logged_in_as["number"], self.logged_in_as["balance"])
-            self.destroy()
-            self.create_home()
-            
+            if self.logged_in_as["balance"] > int(amount):
+                self.logged_in_as["balance"] -= int(amount)
+                accounts.update_balance(self.logged_in_as["number"], self.logged_in_as["balance"])
+                self.destroy()
+                self.create_home()
+            else:
+                self.amount.destroy()
+                self.amount = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Not enough money", placeholder_text_color="red", border_color="red")
+                self.amount.grid(row=3, column=2, pady=10)
+
         except:
             self.amount.destroy()
             self.amount = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Invalid input", placeholder_text_color="red", border_color="red")
             self.amount.grid(row=3, column=2, pady=10)
+
+    def transfer_money(self):
+        from_number = self.logged_in_as["number"]
+        to_number = self.account_number_entry.get()
+        try:
+            amount = int(self.amount.get())
+        except:
+            self.amount.destroy()
+            self.amount = customtkinter.CTkEntry(self, width=200, height=40, placeholder_text="Invalid input", placeholder_text_color="red", border_color="red")
+            self.amount.grid(row=4, column=2, pady=10)
+
+
+        if self.logged_in_as["balance"] < amount:
+            self.amount.destroy()
+            self.amount = customtkinter.CTkEntry(self, width=200, height=40, placeholder_text="Not enough money", placeholder_text_color="red", border_color="red")
+            self.amount.grid(row=4, column=2, pady=10)
+        else:
+            exist = False
+            for account in self.account_list:
+                if account["number"] == to_number:
+                    exist = True
+                    break
+
+            if exist and from_number != to_number:
+                self.destroy()
+
+                self.sure = customtkinter.CTkLabel(self, width=300, height=40, text=f'Do you want to transfer ${amount} to {to_number}?')
+                self.sure.grid(row=0, column=2, pady=20)
+
+                self.yes = customtkinter.CTkButton(self, width=200, height=40, text="Yes", command= lambda : self.commit_transfer(to_number, amount))
+                self.yes.grid(row=1, column=2, pady=10)
+                self.no = customtkinter.CTkButton(self, width=200, height=40, text="Home", command=self.cancel)
+                self.no.grid(row=2, column=2, pady=10)
+            else:
+                self.account_number_entry.destroy()
+                self.account_number_entry = customtkinter.CTkEntry(self, width=200, height=40, placeholder_text="Invalid number", placeholder_text_color="red", border_color="red")
+                self.account_number_entry.grid(row=5, column=2, pady=10)
+
+    def cancel(self):
+        self.destroy()
+        self.create_home()
+
+    def commit_transfer(self, to_number, amount):
+        accounts.transfer_money(self.logged_in_as["number"], to_number, amount)
+
+        self.account_list = accounts.account_list
+
+        for account in self.account_list:
+            if self.logged_in_as["number"] == account["number"]:
+                self.logged_in_as = account
+
+        self.destroy()
+        self.create_home()
