@@ -34,9 +34,9 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(5, weight=1)
         self.grid_columnconfigure(2, weight=1)
         
-        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f"{self.logged_in_as.fname} {self.logged_in_as.lname}")
+        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f"{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}")
         self.name.grid(row=0, column=1, padx=45, pady=10)
-        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as.balance))
+        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as["balance"]))
         self.balance.grid(row=0, column=3, padx=45, pady=10)
 
         self.deposit = customtkinter.CTkButton(self, width=180, height=40, text="Deposit", command=self.create_deposit)
@@ -72,9 +72,9 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(6, weight=1)
         self.grid_columnconfigure(2, weight=1)
 
-        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f"{self.logged_in_as.fname} {self.logged_in_as.lname}")
+        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f"{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}")
         self.name.grid(row=0, column=1, padx=45, pady=10)
-        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as.balance))
+        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as["balance"]))
         self.balance.grid(row=0, column=3, padx=45, pady=10)
 
         self.how_much = customtkinter.CTkLabel(self, width=180, height=40, text="How much do you want to deposit?")
@@ -90,9 +90,9 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(6, weight=1)
         self.grid_columnconfigure(2, weight=1)
 
-        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f"{self.logged_in_as.fname} {self.logged_in_as.lname}")
+        self.name = customtkinter.CTkLabel(self, width=200, height=40, text=f"{self.logged_in_as["fname"]} {self.logged_in_as["lname"]}")
         self.name.grid(row=0, column=1, padx=45, pady=10)
-        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as.balance))
+        self.balance = customtkinter.CTkLabel(self, width=160, height=40, text="Balance: $" + str(self.logged_in_as["balance"]))
         self.balance.grid(row=0, column=3, padx=45, pady=10)
 
         self.how_much = customtkinter.CTkLabel(self, width=180, height=40, text="How much do you want to withdraw?")
@@ -141,8 +141,8 @@ class App(customtkinter.CTk):
     def deposit_money(self):
         amount = self.amount.get()
         try:
-            self.logged_in_as.balance += int(amount)
-            accounts.save_file(self.account_list)
+            self.logged_in_as["balance"] += int(amount)
+            accounts.update_balance(self.logged_in_as["number"], self.logged_in_as["balance"])
             self.destroy()
             self.create_home()
         except:
@@ -153,10 +153,11 @@ class App(customtkinter.CTk):
     def withdraw_money(self):
         amount = self.amount.get()
         try:
-            self.logged_in_as.balance -= int(amount)
-            accounts.save_file(self.account_list)
+            self.logged_in_as["balance"] -= int(amount)
+            accounts.update_balance(self.logged_in_as["number"], self.logged_in_as["balance"])
             self.destroy()
             self.create_home()
+            
         except:
             self.amount.destroy()
             self.amount = customtkinter.CTkEntry(self, width=160, height=40, placeholder_text="Invalid input", placeholder_text_color="red", border_color="red")
